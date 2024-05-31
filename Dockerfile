@@ -1,23 +1,10 @@
-# Use the official Node.js image.
-FROM node:latest
+# Use the official Nginx image as the base image
+FROM nginx:latest
 
-# Create and change to the app directory.
-WORKDIR /usr/src/app
+# Copy the static website files to the appropriate location in the container
+COPY . /usr/share/nginx/html
 
-# Copy the package.json and package-lock.json files.
-COPY package*.json ./
+# Expose port 80 to the host
+EXPOSE 80
 
-# Install dependencies.
-RUN npm install
-
-# Copy the rest of the application code.
-COPY . .
-
-# If you're using a build step (e.g., for a React or Angular app), you might have:
-# RUN npm run build
-
-# Expose the port the app runs on.
-EXPOSE 8070
-
-# Start the application.
-CMD ["npm", "start"]
+# Nginx runs on port 80 by default, so no need to specify CMD
