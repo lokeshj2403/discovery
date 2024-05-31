@@ -1,19 +1,23 @@
-FROM amazonlinux:latest
+# Use the official Node.js image.
+FROM node:latest
 
-RUN yum update -y && \
-    yum install -y httpd && \
-    yum search wget && \
-    yum install wget -y && \
-    yum install unzip -y
+# Create and change to the app directory.
+WORKDIR /usr/src/app
 
-RUN cd /var/www/html
+# Copy the package.json and package-lock.json files.
+COPY package*.json ./
 
-RUN wget https://github.com/lokeshj2403/discovery/archive/refs/heads/main.zip
+# Install dependencies.
+RUN npm install
 
-RUN unzip main.zip
+# Copy the rest of the application code.
+COPY . .
 
-RUN cp -r discovery-main/* /var/www/html/
+# If you're using a build step (e.g., for a React or Angular app), you might have:
+# RUN npm run build
 
-RUN rm -rf discovery-main main.zip
-
+# Expose the port the app runs on.
 EXPOSE 8070
+
+# Start the application.
+CMD ["npm", "start"]
